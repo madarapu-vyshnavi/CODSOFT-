@@ -1,0 +1,27 @@
+def simple_chatbot(user_input):
+    # Convert input to lowercase for case-insensitive matching
+    user_input = user_input.lower()
+
+    if "hello" in user_input or "hi" in user_input:
+        return "Hello there! How can I help you today?"
+    elif "how are you" in user_input or "how are things" in user_input:
+        return "I am just a computer program, but I'm doing great! Thanks for asking."
+    elif "bye" in user_input or "goodbye" in user_input:
+        return "Goodbye! Have a great day."
+    elif "name" in user_input:
+        return "You can call me ChatBot 3000."
+    elif "help" in user_input:
+        return "I can respond to basic greetings, check-ins, and farewells."
+    else:
+        # Default response for unmatched input
+        return "I'm sorry, I don't understand that request. Try typing 'help'."
+
+# --- Main loop to interact with the bot ---
+print("Welcome to the simple chatbot! Type 'bye' to exit.")
+while True:
+    user_input = input("You: ")
+    if user_input.lower() == 'bye':
+        print("ChatBot: Goodbye!")
+        break
+    response = simple_chatbot(user_input)
+    print(f"ChatBot: {response}")
