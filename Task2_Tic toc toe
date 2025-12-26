@@ -1,0 +1,121 @@
+import math
+
+# Define the board
+board = [' ' for x in range(9)]
+player = 'X'
+ai = 'O'
+
+def print_board(board):
+    """Prints the Tic-Tac-Toe board."""
+    print('-------------')
+    print(f'| {board[0]} | {board[1]} | {board[2]} |')
+    print('-------------')
+    print(f'| {board[3]} | {board[4]} | {board[5]} |')
+    print('-------------')
+    print(f'| {board[6]} | {board[7]} | {board[8]} |')
+    print('-------------')
+
+def check_win(board, mark):
+    """Checks if a player has won the game."""
+    win_conditions = [
+        (0, 1, 2), (3, 4, 5), (6, 7, 8), # rows
+        (0, 3, 6), (1, 4, 7), (2, 5, 8), # columns
+        (0, 4, 8), (2, 4, 6)             # diagonals
+    ]
+    for condition in win_conditions:
+        if all(board[i] == mark for i in condition):
+            return True
+    return False
+
+def check_draw(board):
+    """Checks if the game is a draw."""
+    return ' ' not in board
+
+def get_empty_cells(board):
+    """Returns a list of empty cell indices."""
+    return [i for i, cell in enumerate(board) if cell == ' ']
+
+def minimax(board, is_maximizing):
+    """Implements the Minimax algorithm."""
+    if check_win(board, ai):
+        return 1
+    if check_win(board, player):
+        return -1
+    if check_draw(board):
+        return 0
+
+    if is_maximizing:
+        best_score = -math.inf
+        for cell in get_empty_cells(board):
+            board[cell] = ai
+            score = minimax(board, False)
+            board[cell] = ' '
+            best_score = max(score, best_score)
+        return best_score
+    else:
+        best_score = math.inf
+        for cell in get_empty_cells(board):
+            board[cell] = player
+            score = minimax(board, True)
+            board[cell] = ' '
+            best_score = min(score, best_score)
+        return best_score
+
+def best_move(board):
+    """Finds the best move for the AI using Minimax."""
+    best_score = -math.inf
+    move = 0
+    for cell in get_empty_cells(board):
+        board[cell] = ai
+        score = minimax(board, False)
+        board[cell] = ' '
+        if score > best_score:
+            best_score = score
+            move = cell
+    return move
+
+def play_game():
+    """Simulates a game of Tic-Tac-Toe."""
+    current_board = [' ' for _ in range(9)]
+    while True:
+        # Human move (example)
+        # In a real implementation, this would take user input.
+        # For this example, a simple move is hardcoded for demonstration.
+        if ' ' in current_board:
+            # Example human move to cell 0
+            if current_board[0] == ' ':
+                current_board[0] = player
+            else:
+                # Find first available spot if 0 is taken
+                for i, cell in enumerate(current_board):
+                    if cell == ' ':
+                        current_board[i] = player
+                        break
+            print("Human move:")
+            print_board(current_board)
+            if check_win(current_board, player):
+                print("Human wins!")
+                break
+            if check_draw(current_board):
+                print("It's a draw!")
+                break
+
+        # AI move
+        if ' ' in current_board:
+            move = best_move(current_board)
+            current_board[move] = ai
+            print("AI move:")
+            print_board(current_board)
+            if check_win(current_board, ai):
+                print("AI wins!")
+                break
+            if check_draw(current_board):
+                print("It's a draw!")
+                break
+        else:
+            break
+
+if __name__ == "__main__":
+    # The play_game function simulates a game automatically for demonstration.
+    # A real application would involve user interaction.
+    play_game()
