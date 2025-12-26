@@ -1,0 +1,38 @@
+# A simple content-based recommendation system
+from collections import defaultdict
+
+# Sample data: movies and their genres
+movies = {
+    'Movie A': ['Action', 'Sci-Fi'],
+    'Movie B': ['Comedy', 'Romance'],
+    'Movie C': ['Action', 'Thriller'],
+    'Movie D': ['Sci-Fi', 'Adventure'],
+    'Movie E': ['Comedy', 'Drama']
+}
+
+def recommend(movie_title, all_movies):
+    """Recommends movies based on shared genres."""
+    if movie_title not in all_movies:
+        return "Movie not found in list."
+
+    target_genres = set(all_movies[movie_title])
+    scores = defaultdict(int)
+
+    for title, genres in all_movies.items():
+        if title == movie_title:
+            continue
+        
+        # Count shared genres
+        shared_genres = target_genres.intersection(set(genres))
+        scores[title] = len(shared_genres)
+    
+    # Sort by score in descending order
+    sorted_recommendations = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+    
+    # Filter out movies with no shared genres and return top 2
+    return [movie for movie, score in sorted_recommendations if score > 0][:2]
+
+# Example usage
+user_choice = 'Movie A'
+recommendations = recommend(user_choice, movies)
+print(f"If you liked '{user_choice}', you might also like: {recommendations}")
